@@ -1,0 +1,114 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment variables - IMPORTANTE: no subir claves privadas
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+.env.d.tsx
+.env.d.ts
+.env.d.tsx
+.env.d.ts
+
+# Build output
+build
+*.tsbuildinfo
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Testing
+coverage
+.nyc_output
+
+# Temporary files
+*.tmp
+*.temp
+.cache
+
+# IDE - VSCode
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/sftp.json
+
+# IDE - IntelliJ
+*.iml
+.idea/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Supabase - archivos locales de desarrollo
+.supabase
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Production build
+/build
+/dist
+
+# Archivos de configuración sensibles
+config.local.ts
+config.local.js
+secrets.json
+credentials.json
+
+# Carpeta server con posibles variables de entorno
+server/.env
+server/.env.local
+server/node_modules
+# Archivos de configuración sensibles
+supabase-fix-aggressive.sql
+supabase-fix-aggressive.sql
+supabase-setup.sql
+SUPABASE_FIX.MD
+TROUBLESHOOTING.md
+VERCEL_SETUP.md
+vercel.json
+
