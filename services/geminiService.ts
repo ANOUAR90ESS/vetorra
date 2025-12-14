@@ -2,7 +2,7 @@ import { GoogleGenAI, Type, FunctionDeclaration, Modality } from "@google/genai"
 import { Tool, Slide, NewsArticle, TutorialSection } from "../types";
 
 // Helper to get client instance
-const getClient = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
+const getClient = () => new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
 // Helper for generating AI images to avoid code duplication
 export const generateAIImage = async (prompt: string, aspectRatio: string = "16:9"): Promise<string> => {
