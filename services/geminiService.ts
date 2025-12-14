@@ -9,7 +9,7 @@ export const generateAIImage = async (prompt: string, aspectRatio: string = "16:
     const ai = getClient();
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-3-pro-image-preview',
+            model: 'gemini-1.5-flash',
             contents: { parts: [{ text: prompt }] },
             config: { imageConfig: { aspectRatio, imageSize: "1K" } }
         });
@@ -41,7 +41,7 @@ export const generateDirectoryTools = async (count: number = 3, category?: strin
   - howToUse (1-sentence quick start guide)`;
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-1.5-flash',
     contents: prompt,
     config: {
       tools: [{ googleSearch: {} }], // Search Grounding
@@ -105,7 +105,7 @@ export const generateToolDetails = async (topic: string): Promise<Partial<Tool>>
 
   // 1. Generate Text Data
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-1.5-flash',
     contents: prompt,
     config: {
       tools: [{ googleSearch: {} }], // Search Grounding
@@ -158,7 +158,7 @@ export const generateNewsDetails = async (topic: string): Promise<Partial<NewsAr
     `;
 
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-1.5-flash',
         contents: prompt,
         config: {
             tools: [{ googleSearch: {} }], // Enable Search
@@ -203,7 +203,7 @@ export const generateDirectoryNews = async (count: number = 3): Promise<NewsArti
     `;
 
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash', // Flash is fast for batch text
+        model: 'gemini-1.5-flash', // Flash is fast for batch text
         contents: prompt,
         config: {
             tools: [{ googleSearch: {} }], // Search Grounding
@@ -255,7 +255,7 @@ export const extractNewsFromRSSItem = async (title: string, description: string)
   `;
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-1.5-flash',
     contents: prompt,
     config: {
       tools: [{ googleSearch: {} }], // Use Search for grounding RSS items too!
@@ -320,7 +320,7 @@ export const intelligentSearch = async (query: string, tools: Tool[], news: News
 
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-1.5-flash',
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
@@ -349,8 +349,8 @@ export const sendChatMessage = async (history: {role: string, parts: any[]}[], m
   if (useMaps) tools.push({ googleMaps: {} });
 
   // Use Gemini 3 Pro for complex reasoning, or Flash if strict grounding needed (Flash is often faster/better for simple grounding)
-  // Prompt requested gemini-2.5-flash for grounding.
-  const model = (useSearch || useMaps) ? 'gemini-2.5-flash' : 'gemini-3-pro-preview';
+  // Using stable Gemini models
+  const model = (useSearch || useMaps) ? 'gemini-1.5-flash' : 'gemini-1.5-pro';
 
   const response = await ai.models.generateContent({
     model: model,
@@ -386,7 +386,7 @@ export const generateVideo = async (prompt: string, imageBase64?: string, aspect
   }
 
   let operation = await ai.models.generateVideos({
-    model: 'veo-3.1-fast-generate-preview',
+    model: 'gemini-1.5-flash',
     prompt: prompt,
     image: imageInput,
     config: config
@@ -420,9 +420,9 @@ export const generateImage = async (prompt: string, aspectRatio: string, size: s
 
 export const editImage = async (prompt: string, imageBase64: string) => {
   const ai = getClient();
-  // Using gemini-2.5-flash-image for editing (Nano banana powered)
+  // Using stable Gemini model for image editing
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash-image',
+    model: 'gemini-1.5-flash',
     contents: {
       parts: [
         { inlineData: { mimeType: 'image/png', data: imageBase64 } },
@@ -437,7 +437,7 @@ export const editImage = async (prompt: string, imageBase64: string) => {
 export const transcribeAudio = async (audioBase64: string) => {
     const ai = getClient();
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-1.5-flash',
         contents: {
             parts: [
                 { inlineData: { mimeType: 'audio/wav', data: audioBase64 } }, // Assuming wav from recorder
@@ -451,7 +451,7 @@ export const transcribeAudio = async (audioBase64: string) => {
 export const generateSpeech = async (text: string, voice: string = 'Kore') => {
     const ai = getClient();
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-preview-tts',
+        model: 'gemini-1.5-flash',
         contents: { parts: [{ text }] },
         config: {
             responseModalities: [Modality.AUDIO],
@@ -472,7 +472,7 @@ export const generateConversationScript = async (topic: string, speaker1: string
     Keep it natural, conversational, and enthusiastic.`;
 
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-1.5-flash',
         contents: prompt
     });
     return response.text;
@@ -484,7 +484,7 @@ export const generateMultiSpeakerSpeech = async (script: string, speaker1Config:
     const prompt = `TTS the following conversation:\n${script}`;
     
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-preview-tts',
+        model: 'gemini-1.5-flash',
         contents: { parts: [{ text: prompt }] },
         config: {
             responseModalities: [Modality.AUDIO],
@@ -526,7 +526,7 @@ export const extractToolFromRSSItem = async (title: string, description: string)
   `;
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-1.5-flash',
     contents: prompt,
     config: {
       tools: [{ googleSearch: {} }],
@@ -556,7 +556,7 @@ export const generateToolSlides = async (tool: Tool): Promise<Slide[]> => {
     Return JSON array of slides.`;
 
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-1.5-flash',
         contents: prompt,
         config: {
             responseMimeType: "application/json",
@@ -589,7 +589,7 @@ export const generateToolTutorial = async (tool: Tool): Promise<TutorialSection[
     `;
     
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-1.5-flash',
         contents: prompt,
         config: {
             responseMimeType: "application/json",
@@ -628,7 +628,7 @@ export const generatePodcastScript = async (tool: Tool): Promise<string> => {
     The host is excited about its features: ${tool.description}.`;
     
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-1.5-flash',
         contents: prompt
     });
     return response.text || "";
@@ -655,7 +655,7 @@ export const analyzeToolTrends = async (tools: Tool[]): Promise<string> => {
 
   // Use Gemini 3 Pro with Thinking Mode for complex analysis
   const response = await ai.models.generateContent({
-    model: 'gemini-3-pro-preview',
+    model: 'gemini-1.5-pro',
     contents: prompt,
     config: {
         thinkingConfig: { thinkingBudget: 32768 } // Max budget for deep reasoning
