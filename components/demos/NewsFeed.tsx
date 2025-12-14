@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NewsArticle } from '../../types';
-import { Calendar, ExternalLink, Newspaper, Tag, Share2, Wand2, Loader2 } from 'lucide-react';
-import { generateAIImage } from '../../services/geminiService';
+import { Calendar, ExternalLink, Newspaper, Share2 } from 'lucide-react';
 import NewsModal from '../NewsModal';
 
 interface NewsFeedProps {
@@ -10,9 +9,8 @@ interface NewsFeedProps {
   onUpdateArticle?: (id: string, article: NewsArticle) => void;
 }
 
-const NewsFeed: React.FC<NewsFeedProps> = ({ articles, initialArticleId, onUpdateArticle }) => {
+const NewsFeed: React.FC<NewsFeedProps> = ({ articles, initialArticleId }) => {
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
-  const [generatingId, setGeneratingId] = useState<string | null>(null);
 
   // Deep Link Handling
   useEffect(() => {
@@ -37,7 +35,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ articles, initialArticleId, onUpdat
   const handleShare = (e: React.MouseEvent, article: NewsArticle) => {
       e.stopPropagation();
       const url = `${window.location.origin}/#/news/${article.id}`;
-      
+
       if (navigator.share) {
           navigator.share({
               title: article.title,
@@ -48,27 +46,6 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ articles, initialArticleId, onUpdat
           navigator.clipboard.writeText(url);
           alert("Link copied to clipboard!");
       }
-  };
-
-  const handleGenerateImage = async (e: React.MouseEvent, article: NewsArticle) => {
-    e.stopPropagation();
-    if (!onUpdateArticle) return;
-    
-    setGeneratingId(article.id);
-    try {
-        const prompt = `Editorial illustration for news article. Title: ${article.title}. Context: ${article.content ? article.content.substring(0, 300) : article.description}. High quality, photorealistic, 4k.`;
-        const newImageUrl = await generateAIImage(prompt, "16:9");
-        
-        onUpdateArticle(article.id, {
-            ...article,
-            imageUrl: newImageUrl
-        });
-    } catch (error) {
-        console.error("Failed to generate image:", error);
-        alert("Failed to generate image. Please try again.");
-    } finally {
-        setGeneratingId(null);
-    }
   };
 
   return (
@@ -132,17 +109,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ articles, initialArticleId, onUpdat
                         >
                             <Share2 className="w-4 h-4" />
                         </button>
-                        {onUpdateArticle && (
-                            <button
-                                onClick={(e) => handleGenerateImage(e, article)}
-                                disabled={generatingId === article.id}
-                                className="p-2 text-zinc-400 hover:text-purple-400 hover:bg-zinc-800 rounded-full transition-colors disabled:opacity-50"
-                                title="Generate AI Image"
-                            >
-                                {generatingId === article.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
-                            </button>
-                        )}
-                        <button 
+                        <button
                             onClick={() => setSelectedArticle(article)}
                             className="text-purple-400 text-sm font-medium flex items-center gap-1 hover:text-purple-300 transition-colors bg-purple-500/10 hover:bg-purple-500/20 px-3 py-1.5 rounded-full"
                         >
@@ -158,10 +125,9 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ articles, initialArticleId, onUpdat
       )}
 
       {selectedArticle && (
-        <NewsModal 
-          article={selectedArticle} 
+        <NewsModal
+          article={selectedArticle}
           onClose={() => setSelectedArticle(null)}
-          onUpdateArticle={onUpdateArticle}
         />
       )}
     </div>
