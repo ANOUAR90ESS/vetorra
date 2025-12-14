@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NewsArticle } from '../types';
-import { X, Calendar, User, Tag, Share2, Wand2, Loader2 } from 'lucide-react';
-import { generateAIImage } from '../services/geminiService';
+import { X, Calendar, User, Tag, Share2 } from 'lucide-react';
 
 interface NewsModalProps {
   article: NewsArticle;
@@ -9,8 +8,7 @@ interface NewsModalProps {
   onUpdateArticle?: (id: string, article: NewsArticle) => void;
 }
 
-const NewsModal: React.FC<NewsModalProps> = ({ article, onClose, onUpdateArticle }) => {
-  const [generating, setGenerating] = useState(false);
+const NewsModal: React.FC<NewsModalProps> = ({ article, onClose }) => {
 
   // Close on backdrop click
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -33,34 +31,6 @@ const NewsModal: React.FC<NewsModalProps> = ({ article, onClose, onUpdateArticle
     }
   };
 
-  const handleGenerateImage = async () => {
-    if (!onUpdateArticle) return;
-    setGenerating(true);
-    try {
-        // Use article content for a rich prompt
-        const context = article.content 
-            ? article.content.substring(0, 500).replace(/\n/g, ' ') 
-            : article.description;
-            
-        const prompt = `Editorial illustration for news article. 
-        Title: "${article.title}". 
-        Context: ${context}. 
-        Style: High quality, photorealistic, cinematic lighting, 4k resolution, detailed texture.`;
-        
-        const newImageUrl = await generateAIImage(prompt, "16:9");
-        
-        onUpdateArticle(article.id, {
-            ...article,
-            imageUrl: newImageUrl
-        });
-    } catch (error) {
-        console.error("Failed to generate image:", error);
-        alert("Failed to generate image. Please try again.");
-    } finally {
-        setGenerating(false);
-    }
-  };
-
   return (
     <div 
       className="fixed inset-0 z-[60] flex items-center justify-center md:p-4 bg-zinc-950 md:bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
@@ -77,25 +47,12 @@ const NewsModal: React.FC<NewsModalProps> = ({ article, onClose, onUpdateArticle
           />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent" />
           
-          <button 
+          <button
             onClick={onClose}
             className="absolute top-4 right-4 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-md transition-all z-10"
           >
             <X className="w-5 h-5" />
           </button>
-
-          {/* AI Generation Button */}
-          {onUpdateArticle && (
-              <button 
-                onClick={handleGenerateImage}
-                disabled={generating}
-                className="absolute top-4 left-4 bg-purple-600/90 hover:bg-purple-500 text-white px-3 py-1.5 rounded-full backdrop-blur-md transition-all z-10 flex items-center gap-2 text-xs font-bold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                title="Regenerate Image with AI"
-              >
-                {generating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5" />}
-                {generating ? 'Creating...' : 'AI Re-imagine'}
-              </button>
-          )}
 
           <div className="absolute bottom-0 left-0 p-6 md:p-8 w-full">
              <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-300 mb-3">
