@@ -21,7 +21,7 @@ const ToolCard: React.FC<ToolCardProps> = ({ tool, user }) => {
   const checkPlanAndLimit = (tab: 'slides' | 'tutorial'): boolean => {
       // 1. Check Plan Access
       if (!user || user.plan === 'free') {
-          alert("Upgrade Required!\n\nGenerating AI Courses, Slides, and Tutorials is available on Starter and Pro plans.");
+          alert("🚀 Unlock AI-Powered Learning!\n\n✨ Generate instant AI courses, slides, and step-by-step tutorials\n📚 Learn any tool in minutes with personalized content\n🎯 Available on Starter ($9/mo) and Pro ($19/mo) plans\n\n💡 Upgrade now and transform how you learn!");
           return false;
       }
 
@@ -33,7 +33,7 @@ const ToolCard: React.FC<ToolCardProps> = ({ tool, user }) => {
       const currentUsage = parseInt(localStorage.getItem(storageKey) || '0', 10);
       
       if (currentUsage >= limit) {
-          alert(`Daily Limit Reached!\n\nYou have used ${currentUsage}/${limit} generations today. Upgrade to Pro for more or wait until tomorrow.`);
+          alert(`⏰ Daily Limit Reached!\n\n📊 You've used all ${limit} AI generations today\n🚀 Pro users get ${user.plan === 'starter' ? '2x more (10/day)' : 'unlimited'} generations\n⭐ Upgrade to Pro for just $19/mo and never hit limits again!\n\n✨ Your learning journey shouldn't have limits!`);
           return false;
       }
 
